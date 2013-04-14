@@ -169,15 +169,17 @@ int main(int argc, char **argv)
 #include <vector>
 
 /*===========================================================================*/
-// ./ifft n_poiunt input_file.txt
+// ./ifft n_poiunt input_file.txt twiddle_double.txt
 int main(int argc, const char *argv[])
 {
     size_t n_point = atoi(argv[1]);
     double *data_r = new double[n_point];
     double *data_i = new double[n_point];
-    double *w_r    = new double[n_point];
-    double *w_i    = new double[n_point];
+    double *w_r    = new double[n_point/2];
+    double *w_i    = new double[n_point/2];
 
+    /*----------------------------------------------------------------*/
+    // read data
     FILE *fp = NULL;
 
     if ((fp = fopen(argv[2], "r")) != NULL) {
@@ -192,12 +194,27 @@ int main(int argc, const char *argv[])
 
     fclose(fp);
     fp=NULL;
-
-    for (size_t idx = 0; idx < n_point; idx++) {
-        w_r[idx] = std::cos(2.0*M_PI/n_point*idx);
-        w_i[idx] = std::sin(2.0*M_PI/n_point*idx);
+    /*----------------------------------------------------------------*/
+    // read twiddle
+    if ((fp = fopen(argv[3], "r")) != NULL) {
+        double useless_w_r;
+        double useless_w_i;
+        for (size_t idx = 0; idx < n_point/2; idx++) {
+            fscanf(fp, "%le %le\n", &w_r[idx], &w_i[idx]);
+            for (size_t idj = 0; idj < (8192/n_point)-1; idj++) {
+                fscanf(fp, "%le %le\n", &useless_w_r, &useless_w_i);
+            }
+        }
+    } else {
+        fprintf(stderr, "can't open file ");
+        perror(argv[2]);
+        exit(-1);
     }
 
+    fclose(fp);
+    fp=NULL;
+    /*----------------------------------------------------------------*/
+    
     printf("data\n");
     for (size_t idx = 0; idx < n_point; idx++) { printf("%le %le\n", data_r[idx], data_i[idx]); }
     printf("twiddle\n");

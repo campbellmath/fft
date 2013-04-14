@@ -2,7 +2,7 @@ n_point = str2num(getenv('N_POINT'));
 fp = fopen('sin_double.txt', 'w');
 t=1:1:n_point;
 t=t/10000;
-data = sin(2*pi*100*t);
+data = (2^16)*sin(2*pi*100*t);
 fprintf(fp, '%e 0.000000e+00\n', data);
 fclose(fp);
 

@@ -222,13 +222,13 @@ void fft_(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i, int fft
 template<typename T>
 void fft(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i)
 {
-    fft_(n_point, data_r, data_i, w_r, w_i, -1);
+    fft_(n_point, data_r, data_i, w_r, w_i, 1);
 }
 template<typename T>
 /*===========================================================================*/
 void ifft(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i)
 {
-    fft_(n_point, data_r, data_i, w_r, w_i, 1);
+    fft_(n_point, data_r, data_i, w_r, w_i, -1);
 }
 /*===========================================================================*/
 #endif /* end of __FFT_H__ */

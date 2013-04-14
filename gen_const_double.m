@@ -1,6 +1,6 @@
 n_point = str2num(getenv('N_POINT'));
 fp = fopen('const_double.txt', 'w');
-t=ones(1, n_point);
+t=(2^16)*ones(1, n_point);
 fprintf(fp, '%e 0.000000e+00\n', t);
 fclose(fp);
 

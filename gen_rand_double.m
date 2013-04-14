@@ -1,6 +1,6 @@
 n_point = str2num(getenv('N_POINT'));
 fp = fopen('rand_double.txt', 'w');
-t=rand(1, n_point)*1024;
+t=rand(1, n_point)*(2^16);
 fprintf(fp, '%e 0.000000e+00\n', t);
 fclose(fp);
 
