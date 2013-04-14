@@ -16,7 +16,7 @@ function runTest ()
 #    cat result | head -n `perl -e "print 2*(${n_point}+1) "`               | tail -n ${n_point}                 > input_twiddle_"${n_point}".txt
 
     for (( i = 0; i < `perl -e "print log(${n_point})/log(2)"`; i++ )); do
-        cat result | head -n `perl -e "print 2*(${n_point}+1)+(${i}+1)*(${n_point}/2+1)"` | tail -n `perl -e "print ${n_point}/2+1"` > "${output_file}"_stage_"${i}"_"${n_point}".txt
+        cat result | head -n `perl -e "print ((${i}+1)*(${n_point}/2+1))"` | tail -n `perl -e "print ${n_point}/2+1"` > "${output_file}"_stage_"${i}"_"${n_point}".txt
     done
 
     cat result | tail -n ${n_point} > "${output_file}"_"${n_point}".txt
@@ -48,7 +48,7 @@ make clean_all
 make
 
 # for $n in "2 4 8 16 32 512 1024 2048 4096 8192 16384 32768 65536" ; do
-for n in 2048 4096 8192; do
+for n in 8 ; do
     export N_POINT=${n}
     execIFFT ${N_POINT}
     export MATLAB_DATA_NAME=sin_double_result_${n}.txt

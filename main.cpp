@@ -194,6 +194,7 @@ int main(int argc, const char *argv[])
 
     fclose(fp);
     fp=NULL;
+    // read data
     /*----------------------------------------------------------------*/
     // read twiddle
     if ((fp = fopen(argv[3], "r")) != NULL) {
@@ -214,13 +215,8 @@ int main(int argc, const char *argv[])
     fclose(fp);
     fp=NULL;
     /*----------------------------------------------------------------*/
-    
-    printf("data\n");
-    for (size_t idx = 0; idx < n_point; idx++) { printf("%le %le\n", data_r[idx], data_i[idx]); }
-    printf("twiddle\n");
-    for (size_t idx = 0; idx < n_point; idx++) { printf("%le %le\n", w_r[idx], w_i[idx]); }
 
-    //  fft(n_point, data_r, data_i, w_r, w_i);
+    // fft(n_point, data_r, data_i, w_r, w_i);
     ifft(n_point, data_r, data_i, w_r, w_i);
 
     for (size_t idx = 0; idx < n_point; idx++) { printf("%le %le\n", data_r[idx], data_i[idx]); }
