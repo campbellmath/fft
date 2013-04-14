@@ -21,7 +21,7 @@ function runTest ()
 
     cat result | tail -n ${n_point} > "${output_file}"_"${n_point}".txt
 
-    rm result
+#    rm result
 
 }
 
@@ -48,7 +48,8 @@ make clean_all
 make
 
 # for $n in "2 4 8 16 32 512 1024 2048 4096 8192 16384 32768 65536" ; do
-for n in 8 ; do
+for n in 4; do
+    export DATA_BITS=16
     export N_POINT=${n}
     execIFFT ${N_POINT}
     export MATLAB_DATA_NAME=sin_double_result_${n}.txt
