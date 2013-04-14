@@ -169,6 +169,7 @@ int main(int argc, char **argv)
 #include <vector>
 
 /*===========================================================================*/
+#    if 0
 // ./ifft n_poiunt input_file.txt twiddle_double.txt
 int main(int argc, const char *argv[])
 {
@@ -229,4 +230,30 @@ int main(int argc, const char *argv[])
     return 0;
 }
 /*===========================================================================*/
+#    else
+
+int main(int argc, const char *argv[])
+{
+    FixedPoint a_r(0x080a,16); // 6.279052e-02 + j*0.000000e+00
+    FixedPoint a_i(0x0000,16);
+    FixedPoint b_r(0x100b,16); // 1.253332e-01 + j*0.000000e+00
+    FixedPoint b_i(0x0000,16);
+    FixedPoint w_r(0x7ffff,16);// 1.000000e+00 + j*0.000000e+00
+    FixedPoint w_i(0x00000,16);
+
+    std::cout<<"w = "<<w_r<<" + "<<w_i<<std::endl;
+    std::cout<<"a = "<<a_r<<" + "<<a_i<<std::endl;
+    std::cout<<"b = "<<b_r<<" + "<<b_i<<std::endl;
+
+    radix2Butterfly(
+            &a_r, &a_i,
+            &b_r, &b_i,
+            &w_r, &w_i);
+    std::cout<<"A = "<<a_r<<" + "<<a_i<<std::endl;
+    std::cout<<"B = "<<b_r<<" + "<<b_i<<std::endl;
+
+    return 0;
+}
+
+#    endif
 #endif

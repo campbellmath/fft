@@ -21,7 +21,7 @@ function runTest ()
 
     cat result | tail -n ${n_point} > "${output_file}"_"${n_point}".txt
 
-#    rm result
+    rm result
 
 }
 
