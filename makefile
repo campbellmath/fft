@@ -11,8 +11,13 @@ INCPATH  =
 ###############################################################################
 # source files setting
 ###############################################################################
+ifeq ($(OS),Windows_NT)
+C_SOURCES   = 
+CXX_SOURCES = FixedPoint.cpp main.cpp
+else
 C_SOURCES   = $(shell find . -name "*.c")
 CXX_SOURCES = $(shell find . -name "*.cpp")
+endif
 C_OBJS      = $(patsubst %.c,%.o,$(wildcard $(C_SOURCES)))
 CXX_OBJS    = $(patsubst %.cpp,%.o,$(wildcard $(CXX_SOURCES)))
 OBJS        = $(C_OBJS) $(CXX_OBJS)
