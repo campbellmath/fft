@@ -16,10 +16,10 @@ class FixedPoint {
         FixedPoint operator - (const FixedPoint & rhs);
         FixedPoint operator * (const FixedPoint & rhs);
 
-        inline FixedPoint & setValue(unsigned long int value = 0UL) { this->m_value = value; return *this; }
-        inline FixedPoint & setBitLength(unsigned long int bit_length= 0UL) { this->m_bit_length = bit_length; return *this; }
-        inline unsigned long int getValue(unsigned long int value = 0UL) const { return this->m_value; }
-        inline unsigned int getBitLength(unsigned long int bit_length= 0UL) const { return this->m_bit_length; }
+        FixedPoint & setValue(unsigned long int value = 0UL);
+        FixedPoint & setBitLength(unsigned long int bit_length= 0UL);
+        inline unsigned long int getValue() const { return this->m_value; }
+        inline unsigned int getBitLength() const { return this->m_bit_length; }
 
     private:
         unsigned long int m_value;

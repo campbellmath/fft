@@ -4,7 +4,7 @@
 CC       = gcc
 CXX      = g++
 CFLAGS   = -g -Wall
-CXXFLAGS = $(CFLAGS) -Weffc++
+CXXFLAGS = $(CFLAGS) -Weffc++ -pedantic-errors
 LIBS     = -lm
 INCPATH  =
 

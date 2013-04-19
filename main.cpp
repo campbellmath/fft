@@ -1,11 +1,3 @@
-/*===========================================================================*/
-/**
- * @file main.cpp
- * @author Campbell Wen-Chi Guo, CCU/CSIE <campbellmath@gmail.com>
- * @date Created  : Tue 21 Aug 2012 09:12:20 PM
- * @brief
- */
-/*===========================================================================*/
 #include <cstdio>
 #include <cstdlib>
 #include "fft.h"
@@ -234,6 +226,7 @@ int main(int argc, const char *argv[])
 
 int main(int argc, const char *argv[])
 {
+#if 0
     FixedPoint a_r(0x080a,16); // 6.279052e-02 + j*0.000000e+00
     FixedPoint a_i(0x0000,16);
     FixedPoint b_r(0x100b,16); // 1.253332e-01 + j*0.000000e+00
@@ -251,6 +244,13 @@ int main(int argc, const char *argv[])
             &w_r, &w_i);
     std::cout<<"A = "<<a_r<<" + "<<a_i<<std::endl;
     std::cout<<"B = "<<b_r<<" + "<<b_i<<std::endl;
+#endif
+    FixedPoint x(-3,4);
+    FixedPoint y(2,5);
+    FixedPoint z=x*y;
+    std::cout<<"x  "<<x<<std::endl;
+    std::cout<<"y  "<<y<<std::endl;
+    std::cout<<"z  "<<z<<std::endl;
 
     return 0;
 }

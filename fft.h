@@ -1,11 +1,3 @@
-/*===========================================================================*/
-/**
- * @file fft.h
- * @author Campbell Wen-Chi Guo, CCU/CSIE <campbellmath@gmail.com>
- * @date Created  : Tue 21 Aug 2012 09:12:06 PM
- * @brief
- */
-/*===========================================================================*/
 #ifndef __FFT_H__
 #define __FFT_H__
 
