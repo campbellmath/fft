@@ -4,7 +4,7 @@
 /*===========================================================================*/
 static unsigned long int fixed(unsigned long int x, unsigned int bit_length)
 {
-    unsigned int value = 0;
+    unsigned long int value = 0;
 
     for (unsigned int i = 0; i < bit_length; i++) {
         value |= (x&(0x1<<i));
@@ -47,7 +47,13 @@ static unsigned long int signedExtend(
         unsigned int original_bit_length,
         unsigned int final_bit_length)
 {
-    for (unsigned i = original_bit_length; i < final_bit_length; i++) {
+    unsigned long int mask = 0;
+    for (unsigned int i = 0; i < final_bit_length; i++) {
+        mask |= 0x1<<i;
+    }
+    // set high bits to 0 ( > final_bit_length)
+    x &= mask;;
+    for (unsigned int i = original_bit_length; i < final_bit_length; i++) {
         //                            -1 for 2's complement MSB
         x |= ((x>>(original_bit_length-1))&0x1l)<<i;
     }
@@ -126,13 +132,12 @@ FixedPoint FixedPoint::operator - (const FixedPoint & rhs)
 /*===========================================================================*/
 FixedPoint FixedPoint::operator * (const FixedPoint & rhs)
 {
-    // unsigned int bit_length = std::max(this->getBitLength(), rhs.getBitLength());
     unsigned int bit_length = this->getBitLength()+rhs.getBitLength();
 
     unsigned long int l =
-        signedExtend(this->getValue(), this->getBitLength(), bit_length);
+        signedExtend(this->getValue(), this->getBitLength(), 64);
     unsigned long int r =
-        signedExtend(  rhs.getValue(),   rhs.getBitLength(), bit_length);
+        signedExtend(  rhs.getValue(),   rhs.getBitLength(), 64);
 
     FixedPoint tmp(mul(l ,r , bit_length), bit_length);
 

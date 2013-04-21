@@ -31,17 +31,22 @@ function genData ()
     matlab -nosplash -nodesktop -nojvm -r gen_step_double;
     matlab -nosplash -nodesktop -nojvm -r gen_const_double;
     matlab -nosplash -nodesktop -nojvm -r gen_rand_double;
-    matlab -nosplash -nodesktop -nojvm -r gen_twiddle;
+    # matlab -nosplash -nodesktop -nojvm -r gen_twiddle;
 }
 
 function execIFFT ()
 {
     n_point=$1
-    genData
-    runTest ifft   sin_double.txt twiddle_double.txt   sin_double_result ${n_point}
-    runTest ifft  step_double.txt twiddle_double.txt  step_double_result ${n_point}
-    runTest ifft const_double.txt twiddle_double.txt const_double_result ${n_point}
-    runTest ifft  rand_double.txt twiddle_double.txt  rand_double_result ${n_point}
+    # genData
+    # runTest ifft   sin_double.txt twiddle_double.txt   sin_double_result ${n_point}
+    # runTest ifft  step_double.txt twiddle_double.txt  step_double_result ${n_point}
+    # runTest ifft const_double.txt twiddle_double.txt const_double_result ${n_point}
+    # runTest ifft  rand_double.txt twiddle_double.txt  rand_double_result ${n_point}
+
+    runTest ifft   sin_fixed_16_bits.txt twiddle_fixed_20bits.txt   sin_fixed_result ${n_point}
+    runTest ifft  step_fixed_16_bits.txt twiddle_fixed_20bits.txt  step_fixed_result ${n_point}
+    runTest ifft const_fixed_16_bits.txt twiddle_fixed_20bits.txt const_fixed_result ${n_point}
+    runTest ifft  rand_fixed_16_bits.txt twiddle_fixed_20bits.txt  rand_fixed_result ${n_point}
 }
 
 make clean_all
@@ -54,5 +59,10 @@ for n in 4; do
     execIFFT ${N_POINT}
     export MATLAB_DATA_NAME=sin_double_result_${n}.txt
     export C_DATA_NAME=sin_double_result_matlab_${n}.txt
-    matlab -nosplash -nodesktop -nojvm -r snr_analysis;
+    # matlab -nosplash -nodesktop -nojvm -r snr_analysis;
+    # ./ifft $n sin_fixed_16_bits.txt twiddle_fixed_20bits.txt
+    # ./ifft $n rand_fixed_16_bits.txt twiddle_fixed_20bits.txt
+    # ./ifft $n step_fixed_16_bits.txt twiddle_fixed_20bits.txt
+    # ./ifft $n const_fixed_17_bits.txt twiddle_fixed_20bits.txt
+
 done

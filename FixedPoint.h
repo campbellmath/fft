@@ -15,6 +15,22 @@ class FixedPoint {
         FixedPoint operator + (const FixedPoint & rhs);
         FixedPoint operator - (const FixedPoint & rhs);
         FixedPoint operator * (const FixedPoint & rhs);
+        FixedPoint operator << (const int & shift)
+        {
+            FixedPoint tmp(this->m_value, this->m_bit_length);
+            tmp.m_value<<=shift;
+            tmp.m_bit_length+=shift;
+
+            return tmp;
+        }
+        FixedPoint operator >> (const int & shift)
+        {
+            FixedPoint tmp(this->m_value, this->m_bit_length);
+            tmp.m_value>>=shift;
+            tmp.m_bit_length-=shift;
+
+            return tmp;
+        }
 
         FixedPoint & setValue(unsigned long int value = 0UL);
         FixedPoint & setBitLength(unsigned long int bit_length= 0UL);

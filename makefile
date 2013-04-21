@@ -12,7 +12,7 @@ INCPATH  =
 # source files setting
 ###############################################################################
 ifeq ($(OS),Windows_NT)
-C_SOURCES   = 
+C_SOURCES   =
 CXX_SOURCES = FixedPoint.cpp main.cpp
 else
 C_SOURCES   = $(shell find . -name "*.c")
@@ -38,7 +38,7 @@ $(EXEC): $(OBJS)
 
 ###############################################################################
 clean:
-	@rm -vfr $(OBJS) *.txt
+	@rm -vfr $(OBJS)
 clean_all: clean
 	@rm -vfr $(EXEC)
 ###############################################################################

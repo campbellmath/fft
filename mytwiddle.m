@@ -3,7 +3,7 @@
 % Author      : Wen-Chi Guo
 % E-mail      : campbellmath@gmail.com
 % Created     : Sun 14 Apr 2013 07:49:39 PM CST
-% Modified    : Sun 14 Apr 2013 09:11:29 PM CST
+% Modified    : Sun 21 Apr 2013 02:33:56 PM CST
 % Description : Description
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [twiddle, twiddle_fixed] = mytwiddle(transform_lenghth, twiddle_precision)
@@ -35,7 +35,7 @@ idx = (0:transform_lenghth/2-1);
 %
 roundmode = 'convergent';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-twiddle = exp(-1i*2*pi*idx/transform_lenghth);
+twiddle = exp(1i*2*pi*idx/transform_lenghth);
 % twiddle_fixed = fi(twiddle,...
 %                    1, twiddle_precision, twiddle_precision-1,...
 %                    'roundmode', roundmode);

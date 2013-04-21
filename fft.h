@@ -7,6 +7,8 @@
 #include <cstring>
 #include <typeinfo>
 #include <algorithm>
+
+#define DOUBLE (0)
 /*===========================================================================*/
 template<typename T>
 inline T numBitsOne(T n)
@@ -117,12 +119,32 @@ void bitReverse1(int n, T *data_)
  *
  *
  **/
+#include <iostream>
+static unsigned long int signedExtend(
+        unsigned long int x,
+        unsigned int original_bit_length,
+        unsigned int final_bit_length)
+{
+    unsigned long int mask = 0;
+    for (unsigned int i = 0; i < final_bit_length; i++) {
+        mask |= 0x1<<i;
+    }
+    //// set high bits to 0 ( > final_bit_length)
+    x &= mask;
+    for (unsigned int i = original_bit_length; i < final_bit_length; i++) {
+        //                            -1 for 2's complement MSB
+        x |= ((x>>(original_bit_length-1))&0x1l)<<i;
+    }
+
+    return x;
+}
 template<typename T>
 void radix2Butterfly(
         T *a_r, T *a_i,
         T *b_r, T *b_i,
         const T *w_r, const T *w_i)
 {
+#if DOUBLE
     T tmp_r = ((*b_r)*(*w_r)) - ((*b_i)*(*w_i));
     T tmp_i = ((*b_r)*(*w_i)) + ((*b_i)*(*w_r));
 
@@ -131,6 +153,48 @@ void radix2Butterfly(
 
     *a_r = (*a_r) + tmp_r;
     *a_i = (*a_i) + tmp_i;
+#else
+    //printf("=======================================\n");
+    T tmp_w_r = *w_r;
+    T tmp_w_i = *w_i;
+
+    T tmp_r = ((*b_r)*(tmp_w_r)) - ((*b_i)*(tmp_w_i));
+    T tmp_i = ((*b_r)*(tmp_w_i)) + ((*b_i)*(tmp_w_r));
+
+    //printf("w = %5lx(%2d-bit) + %5lx(%2d-bit)\n", w_r->getValue(), w_r->getBitLength(), w_i->getValue(), w_i->getBitLength());
+    //printf("a = %5lx(%2d-bit) + %5lx(%2d-bit)\n", a_r->getValue(), a_r->getBitLength(), a_i->getValue(), a_i->getBitLength());
+    //printf("b = %5lx(%2d-bit) + %5lx(%2d-bit)\n", b_r->getValue(), b_r->getBitLength(), b_i->getValue(), b_i->getBitLength());
+    //printf("tmp   = %5lx(%2d-bit) + %5lx(%2d-bit)\n", tmp_r.getValue(), tmp_r.getBitLength(), tmp_i.getValue(), tmp_i.getBitLength());
+
+    unsigned int current_bit = a_r->getBitLength();
+
+    T tmp0a_r(a_r->getValue()<<(w_r->getBitLength()-1), tmp_r.getBitLength());
+    T tmp0a_i(a_i->getValue()<<(w_i->getBitLength()-1), tmp_i.getBitLength());
+
+    //printf("tmp0a = %5lx(%2d-bit) + %5lx(%2d-bit)\n", tmp0a_r.getValue(), tmp0a_r.getBitLength(), tmp0a_i.getValue(), tmp0a_i.getBitLength());
+
+    T tmp1b_r = tmp0a_r - tmp_r;
+    T tmp1b_i = tmp0a_i - tmp_i;
+
+    //printf("tmp1b = %5lx(%2d-bit) + %5lx(%2d-bit)\n", tmp1b_r.getValue(), tmp1b_r.getBitLength(), tmp1b_i.getValue(), tmp1b_i.getBitLength());
+    T tmp1a_r = tmp0a_r + tmp_r;
+    T tmp1a_i = tmp0a_i + tmp_i;
+    //printf("tmp1a = %5lx(%2d-bit) + %5lx(%2d-bit)\n", tmp1a_r.getValue(), tmp1a_r.getBitLength(), tmp1a_i.getValue(), tmp1a_i.getBitLength());
+
+    // get MSB part
+    T tmp2b_r(signedExtend((tmp1b_r.getValue()>>(w_r->getBitLength())-1), current_bit, current_bit+1), current_bit+1);
+    T tmp2b_i(signedExtend((tmp1b_i.getValue()>>(w_r->getBitLength())-1), current_bit, current_bit+1), current_bit+1);
+
+    T tmp2a_r(signedExtend((tmp1a_r.getValue()>>(w_r->getBitLength())-1), current_bit, current_bit+1), current_bit+1);
+    T tmp2a_i(signedExtend((tmp1a_i.getValue()>>(w_r->getBitLength())-1), current_bit, current_bit+1), current_bit+1);
+
+    *b_r = tmp2b_r;
+    *b_i = tmp2b_i;
+
+    *a_r = tmp2a_r;
+    *a_i = tmp2a_i;
+    //printf("=======================================\n");
+#endif
 
     return;
 }
@@ -179,21 +243,23 @@ void fft_(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i, int fft
                 bitReverse1(n2, data+n2*i);
             }
         }
-#define DOUBLE (1)
-#if DOUBLE
         fprintf(stdout, " a_idx b_idx twiddle_idx       a_r          a_i          b_r          b_i      twiddle_r    twiddle_i        A_r          A_i          B_r          B_i\n");
-#endif
         for (int i = 0; i < n_point; i+=2) {
             int w_idx = (1 << (stages-stage_idx-1))*data[i%n2];
             int butterfly_idx_a=data[i];
             n1 = n2/2;
             T c = w_r[w_idx];
-            T s = fft_inv_sign*w_i[w_idx];
+            T s = w_i[w_idx];
 #if DOUBLE
             fprintf(stdout, "%5d %5d %7d    ", butterfly_idx_a, butterfly_idx_a+n1, w_idx);
             fprintf(stdout, "%12.4f %12.4f ", data_r[butterfly_idx_a],    data_i[butterfly_idx_a]);
             fprintf(stdout, "%12.4f %12.4f ", data_r[butterfly_idx_a+n1], data_i[butterfly_idx_a+n1]);
             fprintf(stdout, "%12.4f %12.4f ", w_r[w_idx], w_i[w_idx]);
+#else
+            fprintf(stdout, "%5d %5d %7d    ", butterfly_idx_a, butterfly_idx_a+n1, w_idx);
+            fprintf(stdout, "%11lx %11lx ", data_r[butterfly_idx_a].getValue(),    data_i[butterfly_idx_a].getValue());
+            fprintf(stdout, "%11lx %11lx ", data_r[butterfly_idx_a+n1].getValue(), data_i[butterfly_idx_a+n1].getValue());
+            fprintf(stdout, "%11lx %11lx ", w_r[w_idx].getValue(), w_i[w_idx].getValue());
 #endif
             radix2Butterfly(
                     data_r+butterfly_idx_a   , data_i+butterfly_idx_a,
@@ -202,6 +268,9 @@ void fft_(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i, int fft
 #if DOUBLE
             fprintf(stdout, "%12.4f %12.4f ",  data_r[butterfly_idx_a],    data_i[butterfly_idx_a]);
             fprintf(stdout, "%12.4f %12.4f\n", data_r[butterfly_idx_a+n1], data_i[butterfly_idx_a+n1]);
+#else
+            fprintf(stdout, "%11lx %11lx ",  data_r[butterfly_idx_a].getValue(),    data_i[butterfly_idx_a].getValue());
+            fprintf(stdout, "%11lx %11lx\n", data_r[butterfly_idx_a+n1].getValue(), data_i[butterfly_idx_a+n1].getValue());
 #endif
         }
     }
@@ -214,13 +283,13 @@ void fft_(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i, int fft
 template<typename T>
 void fft(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i)
 {
-    fft_(n_point, data_r, data_i, w_r, w_i, 1);
+    fft_(n_point, data_r, data_i, w_r, w_i, -1);
 }
 template<typename T>
 /*===========================================================================*/
 void ifft(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i)
 {
-    fft_(n_point, data_r, data_i, w_r, w_i, -1);
+    fft_(n_point, data_r, data_i, w_r, w_i, 1);
 }
 /*===========================================================================*/
 #endif /* end of __FFT_H__ */

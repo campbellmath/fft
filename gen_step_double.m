@@ -2,7 +2,7 @@ n_point   = str2num(getenv('N_POINT'));
 data_bits = str2num(getenv('DATA_BITS'));
 fp = fopen('step_double.txt', 'w');
 t=1:1:n_point;
-data=t/(2^(data_bits-1));
+data=t/(n_point);
 fprintf(fp, '%e 0.000000e+00\n', data);
 fclose(fp);
 
