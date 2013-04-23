@@ -3,7 +3,11 @@
 
 #include <ostream>
 
-typedef unsigned long long int UINT64; 
+#ifdef _WIN32 /* Defined for applications for Win32 and Win64. */
+typedef unsigned long long int UINT64;
+#else
+typedef unsigned long int UINT64;
+#endif
 /*===========================================================================*/
 class FixedPoint {
     public:

@@ -2,7 +2,7 @@ n_point   = str2num(getenv('N_POINT'));
 data_bits = str2num(getenv('DATA_BITS'));
 fp = fopen('step_double.txt', 'w');
 t=1:1:n_point;
-data=t/(n_point);
+data=t/(2^(data_bits-1));
 fprintf(fp, '%e 0.000000e+00\n', data);
 fclose(fp);
 
@@ -16,7 +16,7 @@ fclose(fp);
 
 name = sprintf('step_double_result_matlab_%d.txt', n_point);
 fp = fopen(name, 'w');
-data=ifft(t)*n_point;
+data=ifft(data)*n_point;
 for i=1:1:n_point
     fprintf(fp, '%e %e\n', real(data(i)), imag(data(i)));
 end

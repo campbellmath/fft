@@ -6,15 +6,15 @@ static UINT64 clearUpperBits(UINT64 value, UINT64 n)
 {
     UINT64 mask = 0;
     printf("------------------------------------------------\n");
-    printf("n= %16llx \n", n);
-    printf("mask = %16llx \n", mask);
+    printf("n= %16lx \n", n);
+    printf("mask = %16lx \n", mask);
     for (UINT64 idx = 0; idx < n ; idx++) {
         mask |= (0x1 << idx);
     }
-    printf("mask = %16llx \n", mask);
+    printf("mask = %16lx \n", mask);
 
-    printf("value = %16llx \n", value);
-    printf("value&mask = %16llx \n", value&mask);
+    printf("value = %16lx \n", value);
+    printf("value&mask = %16lx \n", value&mask);
     printf("------------------------------------------------\n");
     return (value&mask);
 }
@@ -156,11 +156,11 @@ FixedPoint FixedPoint::operator * (const FixedPoint & rhs)
     mul = ((( BIT(this->getBitLength()-1, this->getValue()) == 1)^
                 ( BIT(  rhs.getBitLength()-1,   rhs.getValue()) == 1) )==1) ? -(l*r) : l*r ;
 
-    printf("mul = %16llx bit_length = %d \n", mul, bit_length);
+    printf("mul = %16lx bit_length = %lu \n", mul, bit_length);
     printf("this->getBitLength()= %d\n", this->getBitLength());
     printf("rhs.getBitLength() = %d\n", rhs.getBitLength());
     mul = clearUpperBits(mul, bit_length);
-    printf("mul = %16llx bit_length = %d \n", mul, bit_length);
+    printf("mul = %16lx bit_length = %lu \n", mul, bit_length);
 
     return FixedPoint(mul, bit_length);
 

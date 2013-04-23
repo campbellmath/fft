@@ -31,13 +31,13 @@ function genData ()
     matlab -nosplash -nodesktop -nojvm -r gen_step_double;
     matlab -nosplash -nodesktop -nojvm -r gen_const_double;
     matlab -nosplash -nodesktop -nojvm -r gen_rand_double;
-    # matlab -nosplash -nodesktop -nojvm -r gen_twiddle;
+    matlab -nosplash -nodesktop -nojvm -r gen_twiddle;
 }
 
 function execIFFT ()
 {
     n_point=$1
-    # genData
+    genData
     # runTest ifft   sin_double.txt twiddle_double.txt   sin_double_result ${n_point}
     # runTest ifft  step_double.txt twiddle_double.txt  step_double_result ${n_point}
     # runTest ifft const_double.txt twiddle_double.txt const_double_result ${n_point}
@@ -53,7 +53,7 @@ make clean_all
 make
 
 # for $n in "2 4 8 16 32 512 1024 2048 4096 8192 16384 32768 65536" ; do
-for n in 4; do
+for n in 8192; do
     export DATA_BITS=16
     export N_POINT=${n}
     execIFFT ${N_POINT}
@@ -64,5 +64,4 @@ for n in 4; do
     # ./ifft $n rand_fixed_16_bits.txt twiddle_fixed_20bits.txt
     # ./ifft $n step_fixed_16_bits.txt twiddle_fixed_20bits.txt
     # ./ifft $n const_fixed_17_bits.txt twiddle_fixed_20bits.txt
-
 done

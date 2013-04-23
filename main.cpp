@@ -13,7 +13,8 @@
 #if (DOUBLE==1)
 #define TEST BUFFTERFLY_DOUBLE
 #else
-#define TEST BUFFTERFLY_FIX
+// #define TEST BUFFTERFLY_FIX
+#define TEST IFFT
 #endif
 /*===========================================================================*/
 #if (TEST==IFFT)
@@ -168,13 +169,6 @@ int main(int argc, const char *argv[])
             &w_r, &w_i);
     std::cout<<"A = "<<a_r<<" + "<<a_i<<"    "<<a_r.getBitLength()<<std::endl;
     std::cout<<"B = "<<b_r<<" + "<<b_i<<"    "<<b_r.getBitLength()<<std::endl;
-
-    printf("sizeof(int) = %lu \n"                    , sizeof(int)                      );
-    printf("sizeof(unsigned int) = %lu \n"           , sizeof(unsigned int)             );
-    printf("sizeof(unsigned long) = %lu \n"          , sizeof(unsigned long)            );
-    printf("sizeof(unsigned long int) = %lu \n"      , sizeof(unsigned long int)        );
-    printf("sizeof(unsigned long long int) = %lu \n" , sizeof(unsigned long long int)   );
-    printf("sizeofsize_t() = %lu \n"                 , sizeof(size_t)                   );
 
     return 0;
 }

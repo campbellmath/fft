@@ -16,7 +16,7 @@ fclose(fp);
 
 name = sprintf('rand_double_result_matlab_%d.txt', n_point);
 fp = fopen(name, 'w');
-data=ifft(t)*n_point;
+data=ifft(data)*n_point;
 for i=1:1:n_point
     fprintf(fp, '%e %e\n', real(data(i)), imag(data(i)));
 end
