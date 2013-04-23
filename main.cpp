@@ -3,13 +3,20 @@
 #include "fft.h"
 #include "FixedPoint.h"
 
-#define DOUBLE (0)
-
 #include <iostream>
 #include <vector>
 
+#define IFFT               (0)
+#define BUFFTERFLY_DOUBLE  (1)
+#define BUFFTERFLY_FIX     (2)
+
+#if (DOUBLE==1)
+#define TEST BUFFTERFLY_DOUBLE
+#else
+#define TEST BUFFTERFLY_FIX
+#endif
 /*===========================================================================*/
-#if 1
+#if (TEST==IFFT)
 // ./ifft n_poiunt input_file.txt twiddle_double.txt
 int main(int argc, const char *argv[])
 {
@@ -105,17 +112,51 @@ int main(int argc, const char *argv[])
     return 0;
 }
 /*===========================================================================*/
-#else
+#elif (TEST==BUFFTERFLY_DOUBLE)
 
 int main(int argc, const char *argv[])
 {
-#if 0
-    FixedPoint a_r(0x07889,17); // 6.279052e-02 + j*0.000000e+00
-    FixedPoint a_i(0x00000,17);
-    FixedPoint b_r(0x1e8da,17); // 1.253332e-01 + j*0.000000e+00
-    FixedPoint b_i(0x00000,17);
-    FixedPoint w_r(0x7fff,16);// 1.000000e+00 + j*0.000000e+00
-    FixedPoint w_i(0x0000,16);
+    double a_r = 30875.0/32768.0; // 30857.0/2**15
+    double a_i =     0.0;
+    double b_r = -5926.0/32768.0; // -5926.0/2**15
+    double b_i =     0.0;
+    double w_r =     1.0;
+    double w_i =     0.0;
+
+    std::cout<<"w = "<<w_r<<" + "<<w_i<<std::endl;
+    std::cout<<"a = "<<a_r<<" + "<<a_i<<std::endl;
+    std::cout<<"b = "<<b_r<<" + "<<b_i<<std::endl;
+
+    radix2Butterfly(
+            &a_r, &a_i,
+            &b_r, &b_i,
+            &w_r, &w_i);
+    std::cout<<"A = "<<a_r<<" + "<<a_i<<"    "<<std::endl;
+    std::cout<<"B = "<<b_r<<" + "<<b_i<<"    "<<std::endl;
+
+    // w = 1 + 0
+    // a = 0.94223 + 0
+    // b = -0.180847 + 0
+    // A = 0.761383 + 0
+    // B = 1.12308 + 0
+
+    return 0;
+}
+#elif (TEST==BUFFTERFLY_FIX)
+int main(int argc, const char *argv[])
+{
+    FixedPoint a_r(0x07889, 17);
+    FixedPoint a_i(0x00000, 17);
+    FixedPoint b_r(0x1e8da, 17);
+    FixedPoint b_i(0x00000, 17);
+    FixedPoint w_r( 0x7fff, 16);
+    FixedPoint w_i( 0x0000, 16);
+///   FixedPoint a_r(0x0040, 16);
+///   FixedPoint a_i(0x0000, 16);
+///   FixedPoint b_r(0x0040, 16);
+///   FixedPoint b_i(0x0000, 16);
+///   FixedPoint w_r(0x7fff, 16);
+///   FixedPoint w_i(0x0000, 16);
 
     std::cout<<"w = "<<w_r<<" + "<<w_i<<std::endl;
     std::cout<<"a = "<<a_r<<" + "<<a_i<<std::endl;
@@ -127,10 +168,21 @@ int main(int argc, const char *argv[])
             &w_r, &w_i);
     std::cout<<"A = "<<a_r<<" + "<<a_i<<"    "<<a_r.getBitLength()<<std::endl;
     std::cout<<"B = "<<b_r<<" + "<<b_i<<"    "<<b_r.getBitLength()<<std::endl;
+
+    printf("sizeof(int) = %lu \n"                    , sizeof(int)                      );
+    printf("sizeof(unsigned int) = %lu \n"           , sizeof(unsigned int)             );
+    printf("sizeof(unsigned long) = %lu \n"          , sizeof(unsigned long)            );
+    printf("sizeof(unsigned long int) = %lu \n"      , sizeof(unsigned long int)        );
+    printf("sizeof(unsigned long long int) = %lu \n" , sizeof(unsigned long long int)   );
+    printf("sizeofsize_t() = %lu \n"                 , sizeof(size_t)                   );
+
+    return 0;
+}
 #else
+int main(int argc, const char *argv[])
+{
     FixedPoint x(0xe, 4);
     FixedPoint y(0xd, 4);
-
 
     FixedPoint z=x*y;
     std::cout<<"x  "<<x<<std::endl;
@@ -138,9 +190,6 @@ int main(int argc, const char *argv[])
     std::cout<<"z  "<<z<<std::endl;
 
     printf("0x%x\n", signedExtend(0x2f, 3, 5));
-#endif
-
     return 0;
 }
-
 #endif

@@ -7,6 +7,7 @@
 #include <cstring>
 #include <typeinfo>
 #include <algorithm>
+#include <iostream>
 
 #define DOUBLE (0)
 /*===========================================================================*/
@@ -119,25 +120,6 @@ void bitReverse1(int n, T *data_)
  *
  *
  **/
-#include <iostream>
-static unsigned long int signedExtend(
-        unsigned long int x,
-        unsigned int original_bit_length,
-        unsigned int final_bit_length)
-{
-    unsigned long int mask = 0;
-    for (unsigned int i = 0; i < final_bit_length; i++) {
-        mask |= 0x1<<i;
-    }
-    //// set high bits to 0 ( > final_bit_length)
-    x &= mask;
-    for (unsigned int i = original_bit_length; i < final_bit_length; i++) {
-        //                            -1 for 2's complement MSB
-        x |= ((x>>(original_bit_length-1))&0x1l)<<i;
-    }
-
-    return x;
-}
 template<typename T>
 void radix2Butterfly(
         T *a_r, T *a_i,
@@ -145,55 +127,48 @@ void radix2Butterfly(
         const T *w_r, const T *w_i)
 {
 #if DOUBLE
-    T tmp_r = ((*b_r)*(*w_r)) - ((*b_i)*(*w_i));
-    T tmp_i = ((*b_r)*(*w_i)) + ((*b_i)*(*w_r));
+    T bw_r = ((*b_r)*(*w_r)) - ((*b_i)*(*w_i));
+    T bw_i = ((*b_r)*(*w_i)) + ((*b_i)*(*w_r));
 
-    *b_r = (*a_r) - tmp_r;
-    *b_i = (*a_i) - tmp_i;
+    *b_r = (*a_r) - bw_r;
+    *b_i = (*a_i) - bw_i;
 
-    *a_r = (*a_r) + tmp_r;
-    *a_i = (*a_i) + tmp_i;
+    *a_r = (*a_r) + bw_r;
+    *a_i = (*a_i) + bw_i;
 #else
-    //printf("=======================================\n");
+    unsigned int current_bit = a_r->getBitLength();
+
+    printf("=======================================\n");
     T tmp_w_r = *w_r;
     T tmp_w_i = *w_i;
 
-    T tmp_r = ((*b_r)*(tmp_w_r)) - ((*b_i)*(tmp_w_i));
-    T tmp_i = ((*b_r)*(tmp_w_i)) + ((*b_i)*(tmp_w_r));
+    T bw_r = ((*b_r)*(tmp_w_r)) - ((*b_i)*(tmp_w_i));
+    T bw_i = ((*b_r)*(tmp_w_i)) + ((*b_i)*(tmp_w_r));
 
-    //printf("w = %5lx(%2d-bit) + %5lx(%2d-bit)\n", w_r->getValue(), w_r->getBitLength(), w_i->getValue(), w_i->getBitLength());
-    //printf("a = %5lx(%2d-bit) + %5lx(%2d-bit)\n", a_r->getValue(), a_r->getBitLength(), a_i->getValue(), a_i->getBitLength());
-    //printf("b = %5lx(%2d-bit) + %5lx(%2d-bit)\n", b_r->getValue(), b_r->getBitLength(), b_i->getValue(), b_i->getBitLength());
-    //printf("tmp   = %5lx(%2d-bit) + %5lx(%2d-bit)\n", tmp_r.getValue(), tmp_r.getBitLength(), tmp_i.getValue(), tmp_i.getBitLength());
+    printf("w     = %16llx(%2d-bit) + %16llx(%2d-bit)\n", w_r->getValue(), w_r->getBitLength(), w_i->getValue(), w_i->getBitLength());
+    printf("a     = %16llx(%2d-bit) + %16llx(%2d-bit)\n", a_r->getValue(), a_r->getBitLength(), a_i->getValue(), a_i->getBitLength());
+    printf("b     = %16llx(%2d-bit) + %16llx(%2d-bit)\n", b_r->getValue(), b_r->getBitLength(), b_i->getValue(), b_i->getBitLength());
+    printf("bw    = %16llx(%2d-bit) + %16llx(%2d-bit)\n", bw_r.getValue(), bw_r.getBitLength(), bw_i.getValue(), bw_i.getBitLength());
 
-    unsigned int current_bit = a_r->getBitLength();
+    bw_r = bw_r>>(w_r->getBitLength()-1);
+    bw_i = bw_i>>(w_i->getBitLength()-1);
+    printf("bw    = %16llx(%2d-bit) + %16llx(%2d-bit)\n", bw_r.getValue(), bw_r.getBitLength(), bw_i.getValue(), bw_i.getBitLength());
 
-    T tmp0a_r(a_r->getValue()<<(w_r->getBitLength()-1), tmp_r.getBitLength());
-    T tmp0a_i(a_i->getValue()<<(w_i->getBitLength()-1), tmp_i.getBitLength());
 
-    //printf("tmp0a = %5lx(%2d-bit) + %5lx(%2d-bit)\n", tmp0a_r.getValue(), tmp0a_r.getBitLength(), tmp0a_i.getValue(), tmp0a_i.getBitLength());
+    T tmp_b_r = *a_r - bw_r;
+    T tmp_b_i = *a_i - bw_i;
+    printf("tmp_b = %16llx(%2d-bit) + %16llx(%2d-bit)\n", tmp_b_r.getValue(), tmp_b_r.getBitLength(), tmp_b_i.getValue(), tmp_b_i.getBitLength());
 
-    T tmp1b_r = tmp0a_r - tmp_r;
-    T tmp1b_i = tmp0a_i - tmp_i;
+    T tmp_a_r = *a_r + bw_r;
+    T tmp_a_i = *a_i + bw_i;
+    printf("tmp_a = %16llx(%2d-bit) + %16llx(%2d-bit)\n", tmp_a_r.getValue(), tmp_a_r.getBitLength(), tmp_a_i.getValue(), tmp_a_i.getBitLength());
 
-    //printf("tmp1b = %5lx(%2d-bit) + %5lx(%2d-bit)\n", tmp1b_r.getValue(), tmp1b_r.getBitLength(), tmp1b_i.getValue(), tmp1b_i.getBitLength());
-    T tmp1a_r = tmp0a_r + tmp_r;
-    T tmp1a_i = tmp0a_i + tmp_i;
-    //printf("tmp1a = %5lx(%2d-bit) + %5lx(%2d-bit)\n", tmp1a_r.getValue(), tmp1a_r.getBitLength(), tmp1a_i.getValue(), tmp1a_i.getBitLength());
+    *b_r = T(tmp_b_r.getValue(), current_bit+1);
+    *b_i = T(tmp_b_i.getValue(), current_bit+1);
 
-    // get MSB part
-    T tmp2b_r(signedExtend((tmp1b_r.getValue()>>(w_r->getBitLength())-1), current_bit, current_bit+1), current_bit+1);
-    T tmp2b_i(signedExtend((tmp1b_i.getValue()>>(w_r->getBitLength())-1), current_bit, current_bit+1), current_bit+1);
-
-    T tmp2a_r(signedExtend((tmp1a_r.getValue()>>(w_r->getBitLength())-1), current_bit, current_bit+1), current_bit+1);
-    T tmp2a_i(signedExtend((tmp1a_i.getValue()>>(w_r->getBitLength())-1), current_bit, current_bit+1), current_bit+1);
-
-    *b_r = tmp2b_r;
-    *b_i = tmp2b_i;
-
-    *a_r = tmp2a_r;
-    *a_i = tmp2a_i;
-    //printf("=======================================\n");
+    *a_r = T(tmp_a_r.getValue(), current_bit+1);
+    *a_i = T(tmp_a_i.getValue(), current_bit+1);
+    printf("=======================================\n");
 #endif
 
     return;

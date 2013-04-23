@@ -3,42 +3,28 @@
 
 #include <ostream>
 
+typedef unsigned long long int UINT64; 
 /*===========================================================================*/
 class FixedPoint {
     public:
         // default constructor
-        FixedPoint(unsigned long int value = 0UL, unsigned long int bit_length=0U);
+        FixedPoint(UINT64 value = 0UL, UINT64 bit_length=0UL);
         // destructor
         virtual ~FixedPoint();
 
-        FixedPoint operator - ();
         FixedPoint operator + (const FixedPoint & rhs);
         FixedPoint operator - (const FixedPoint & rhs);
         FixedPoint operator * (const FixedPoint & rhs);
-        FixedPoint operator << (const int & shift)
-        {
-            FixedPoint tmp(this->m_value, this->m_bit_length);
-            tmp.m_value<<=shift;
-            tmp.m_bit_length+=shift;
+        FixedPoint operator << (const int & shift);
+        FixedPoint operator >> (const int & shift);
 
-            return tmp;
-        }
-        FixedPoint operator >> (const int & shift)
-        {
-            FixedPoint tmp(this->m_value, this->m_bit_length);
-            tmp.m_value>>=shift;
-            tmp.m_bit_length-=shift;
-
-            return tmp;
-        }
-
-        FixedPoint & setValue(unsigned long int value = 0UL);
-        FixedPoint & setBitLength(unsigned long int bit_length= 0UL);
-        inline unsigned long int getValue() const { return this->m_value; }
+        FixedPoint & setValue(UINT64 value = 0UL);
+        FixedPoint & setBitLength(UINT64 bit_length= 0UL);
+        inline UINT64 getValue() const { return this->m_value; }
         inline unsigned int getBitLength() const { return this->m_bit_length; }
 
     private:
-        unsigned long int m_value;
+        UINT64 m_value;
         unsigned int m_bit_length;
 
 }; /* end of class FixedPoint */
