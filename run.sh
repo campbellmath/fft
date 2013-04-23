@@ -4,13 +4,15 @@
 function runTest ()
 {
     program_name="$1"
-    input_data_file="$2"
-    input_twiddle_file="$3"
-    output_file="$4"
-    n_point="$5"
+    n_point="$2"
+    input_data_file="$3"
+    input_twiddle_file="$4"
+    output_file="$5"
+    data_bits="$6"
+    twiddle_bits="$7"
     # Generate Double Data
 
-    ./$1 ${n_point} ${input_data_file}  ${input_twiddle_file} > result
+    ./$1 ${n_point} ${input_data_file} ${input_twiddle_file}  ${data_bits} ${twiddle_bits} > result
 
 #    cat result | head -n `perl -e "print ${n_point}+1 "`                   | tail -n ${n_point}                 > input_data_"${n_point}".txt
 #    cat result | head -n `perl -e "print 2*(${n_point}+1) "`               | tail -n ${n_point}                 > input_twiddle_"${n_point}".txt
@@ -37,16 +39,18 @@ function genData ()
 function execIFFT ()
 {
     n_point=$1
+    data_bits=$2
+    twiddle_bits=$3
     genData
     # runTest ifft   sin_double.txt twiddle_double.txt   sin_double_result ${n_point}
     # runTest ifft  step_double.txt twiddle_double.txt  step_double_result ${n_point}
     # runTest ifft const_double.txt twiddle_double.txt const_double_result ${n_point}
     # runTest ifft  rand_double.txt twiddle_double.txt  rand_double_result ${n_point}
 
-    runTest ifft   sin_fixed_16_bits.txt twiddle_fixed_20bits.txt   sin_fixed_result ${n_point}
-    runTest ifft  step_fixed_16_bits.txt twiddle_fixed_20bits.txt  step_fixed_result ${n_point}
-    runTest ifft const_fixed_16_bits.txt twiddle_fixed_20bits.txt const_fixed_result ${n_point}
-    runTest ifft  rand_fixed_16_bits.txt twiddle_fixed_20bits.txt  rand_fixed_result ${n_point}
+    runTest ifft ${n_point}   sin_fixed_"${data_bits}"_bits.txt twiddle_fixed_20bits.txt   sin_fixed_result ${data_bits} ${twiddle_bits}
+    runTest ifft ${n_point}  step_fixed_"${data_bits}"_bits.txt twiddle_fixed_20bits.txt  step_fixed_result ${data_bits} ${twiddle_bits}
+    runTest ifft ${n_point} const_fixed_"${data_bits}"_bits.txt twiddle_fixed_20bits.txt const_fixed_result ${data_bits} ${twiddle_bits}
+    runTest ifft ${n_point}  rand_fixed_"${data_bits}"_bits.txt twiddle_fixed_20bits.txt  rand_fixed_result ${data_bits} ${twiddle_bits}
 }
 
 make clean_all
@@ -54,14 +58,11 @@ make
 
 # for $n in "2 4 8 16 32 512 1024 2048 4096 8192 16384 32768 65536" ; do
 for n in 8192; do
-    export DATA_BITS=16
+    export DATA_BITS=20
+    export TWIDDLE_BITS=19
     export N_POINT=${n}
-    execIFFT ${N_POINT}
+    execIFFT ${N_POINT} ${DATA_BITS} ${TWIDDLE_BITS}
     export MATLAB_DATA_NAME=sin_double_result_${n}.txt
     export C_DATA_NAME=sin_double_result_matlab_${n}.txt
     # matlab -nosplash -nodesktop -nojvm -r snr_analysis;
-    # ./ifft $n sin_fixed_16_bits.txt twiddle_fixed_20bits.txt
-    # ./ifft $n rand_fixed_16_bits.txt twiddle_fixed_20bits.txt
-    # ./ifft $n step_fixed_16_bits.txt twiddle_fixed_20bits.txt
-    # ./ifft $n const_fixed_17_bits.txt twiddle_fixed_20bits.txt
 done

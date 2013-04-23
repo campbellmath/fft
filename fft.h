@@ -138,37 +138,37 @@ void radix2Butterfly(
 #else
     unsigned int current_bit = a_r->getBitLength();
 
-    printf("=======================================\n");
+    // printf("=======================================\n");
     T tmp_w_r = *w_r;
     T tmp_w_i = *w_i;
 
     T bw_r = ((*b_r)*(tmp_w_r)) - ((*b_i)*(tmp_w_i));
     T bw_i = ((*b_r)*(tmp_w_i)) + ((*b_i)*(tmp_w_r));
 
-    printf("w     = %16lx(%2d-bit) + %16lx(%2d-bit)\n", w_r->getValue(), w_r->getBitLength(), w_i->getValue(), w_i->getBitLength());
-    printf("a     = %16lx(%2d-bit) + %16lx(%2d-bit)\n", a_r->getValue(), a_r->getBitLength(), a_i->getValue(), a_i->getBitLength());
-    printf("b     = %16lx(%2d-bit) + %16lx(%2d-bit)\n", b_r->getValue(), b_r->getBitLength(), b_i->getValue(), b_i->getBitLength());
-    printf("bw    = %16lx(%2d-bit) + %16lx(%2d-bit)\n", bw_r.getValue(), bw_r.getBitLength(), bw_i.getValue(), bw_i.getBitLength());
+    // printf("w     = %16lx(%2d-bit) + %16lx(%2d-bit)\n", w_r->getValue(), w_r->getBitLength(), w_i->getValue(), w_i->getBitLength());
+    // printf("a     = %16lx(%2d-bit) + %16lx(%2d-bit)\n", a_r->getValue(), a_r->getBitLength(), a_i->getValue(), a_i->getBitLength());
+    // printf("b     = %16lx(%2d-bit) + %16lx(%2d-bit)\n", b_r->getValue(), b_r->getBitLength(), b_i->getValue(), b_i->getBitLength());
+    // printf("bw    = %16lx(%2d-bit) + %16lx(%2d-bit)\n", bw_r.getValue(), bw_r.getBitLength(), bw_i.getValue(), bw_i.getBitLength());
 
     bw_r = bw_r>>(w_r->getBitLength()-1);
     bw_i = bw_i>>(w_i->getBitLength()-1);
-    printf("bw    = %16lx(%2d-bit) + %16lx(%2d-bit)\n", bw_r.getValue(), bw_r.getBitLength(), bw_i.getValue(), bw_i.getBitLength());
+    // printf("bw    = %16lx(%2d-bit) + %16lx(%2d-bit)\n", bw_r.getValue(), bw_r.getBitLength(), bw_i.getValue(), bw_i.getBitLength());
 
 
     T tmp_b_r = *a_r - bw_r;
     T tmp_b_i = *a_i - bw_i;
-    printf("tmp_b = %16lx(%2d-bit) + %16lx(%2d-bit)\n", tmp_b_r.getValue(), tmp_b_r.getBitLength(), tmp_b_i.getValue(), tmp_b_i.getBitLength());
+    // printf("tmp_b = %16lx(%2d-bit) + %16lx(%2d-bit)\n", tmp_b_r.getValue(), tmp_b_r.getBitLength(), tmp_b_i.getValue(), tmp_b_i.getBitLength());
 
     T tmp_a_r = *a_r + bw_r;
     T tmp_a_i = *a_i + bw_i;
-    printf("tmp_a = %16lx(%2d-bit) + %16lx(%2d-bit)\n", tmp_a_r.getValue(), tmp_a_r.getBitLength(), tmp_a_i.getValue(), tmp_a_i.getBitLength());
+    // printf("tmp_a = %16lx(%2d-bit) + %16lx(%2d-bit)\n", tmp_a_r.getValue(), tmp_a_r.getBitLength(), tmp_a_i.getValue(), tmp_a_i.getBitLength());
 
     *b_r = T(tmp_b_r.getValue(), current_bit+1);
     *b_i = T(tmp_b_i.getValue(), current_bit+1);
 
     *a_r = T(tmp_a_r.getValue(), current_bit+1);
     *a_i = T(tmp_a_i.getValue(), current_bit+1);
-    printf("=======================================\n");
+    // printf("=======================================\n");
 #endif
 
     return;

@@ -18,7 +18,7 @@
 #endif
 /*===========================================================================*/
 #if (TEST==IFFT)
-// ./ifft n_poiunt input_file.txt twiddle_double.txt
+// ./ifft n_poiunt input_file.txt twiddle_double.txt data_bit twiddle_bit
 int main(int argc, const char *argv[])
 {
     size_t n_point = atoi(argv[1]);
@@ -28,6 +28,10 @@ int main(int argc, const char *argv[])
     double *w_r    = new double[n_point/2];
     double *w_i    = new double[n_point/2];
 #else
+    int data_bit    = atoi(argv[4]);
+    int twiddle_bit = atoi(argv[5]);
+
+
     FixedPoint *data_r = new FixedPoint[n_point];
     FixedPoint *data_i = new FixedPoint[n_point];
     FixedPoint *w_r    = new FixedPoint[n_point/2];
@@ -46,8 +50,8 @@ int main(int argc, const char *argv[])
             unsigned long int r = 0L;
             unsigned long int i = 0L;
             fscanf(fp, "%lX %lX\n", &r, &i);
-            data_r[idx].setBitLength(16).setValue(r);
-            data_i[idx].setBitLength(16).setValue(i);
+            data_r[idx].setBitLength(data_bit).setValue(r);
+            data_i[idx].setBitLength(data_bit).setValue(i);
             // std::cout<<data_r[idx]<<" "<<data_i[idx]<<std::endl;
 #endif
         }
@@ -79,8 +83,8 @@ int main(int argc, const char *argv[])
             unsigned long int r;
             unsigned long int i;
             fscanf(fp, "%lx %lx\n", &r, &i);
-            w_r[idx].setBitLength(16).setValue(r>>(20-16));
-            w_i[idx].setBitLength(16).setValue(i>>(20-16));
+            w_r[idx].setBitLength(twiddle_bit).setValue(r>>(20-twiddle_bit));
+            w_i[idx].setBitLength(twiddle_bit).setValue(i>>(20-twiddle_bit));
             for (size_t idj = 0; idj < (8192/n_point)-1; idj++) {
                 fscanf(fp, "%lx %lx\n", &useless_w_r, &useless_w_i);
             }

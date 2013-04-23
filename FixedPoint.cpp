@@ -5,17 +5,17 @@
 static UINT64 clearUpperBits(UINT64 value, UINT64 n)
 {
     UINT64 mask = 0;
-    printf("------------------------------------------------\n");
-    printf("n= %16lx \n", n);
-    printf("mask = %16lx \n", mask);
+//    printf("------------------------------------------------\n");
+//    printf("n= %16lu \n", n);
+//    printf("mask = %16lx \n", mask);
     for (UINT64 idx = 0; idx < n ; idx++) {
-        mask |= (0x1 << idx);
+        mask |= (0x1lu << idx);
     }
-    printf("mask = %16lx \n", mask);
-
-    printf("value = %16lx \n", value);
-    printf("value&mask = %16lx \n", value&mask);
-    printf("------------------------------------------------\n");
+//    printf("mask = %16lx \n", mask);
+//
+//    printf("value = %16lx \n", value);
+//    printf("value&mask = %16lx \n", value&mask);
+//    printf("------------------------------------------------\n");
     return (value&mask);
 }
 /*===========================================================================*/
@@ -57,15 +57,10 @@ static UINT64 signedExtend(
         unsigned int original_bit_length,
         unsigned int final_bit_length)
 {
-    UINT64 mask = 0;
-    for (unsigned int i = 0; i < final_bit_length; i++) {
-        mask |= 0x1<<i;
-    }
-    // set high bits to 0 ( > final_bit_length)
-    x &= mask;;
+    x = clearUpperBits(x, final_bit_length);
     for (unsigned int i = original_bit_length; i < final_bit_length; i++) {
         //                            -1 for 2's complement MSB
-        x |= ((x>>(original_bit_length-1))&0x1l)<<i;
+        x |= ((x>>(original_bit_length-1))&0x1lu)<<i;
     }
 
     return x;
@@ -138,17 +133,17 @@ FixedPoint FixedPoint::operator * (const FixedPoint & rhs)
 
     UINT64 l = this->getValue();
     UINT64 r =   rhs.getValue();
-    UINT64 mul = 0L;
+    UINT64 mul = 0lu;
 
     // if negative,  change to positive 
     if ( BIT(this->getBitLength()-1, this->getValue()) == 1) {
         l = clearUpperBits(l, this->getBitLength());
-        l = ~l+1UL;
+        l = ~l+1lu;
         l = clearUpperBits(l, this->getBitLength());
     }
     if ( BIT(rhs.getBitLength()-1, rhs.getValue()) == 1) {
         r = clearUpperBits(r, rhs.getBitLength());
-        r = ~r+1UL;
+        r = ~r+1lu;
         r = clearUpperBits(r, rhs.getBitLength());
     }
 
@@ -156,11 +151,11 @@ FixedPoint FixedPoint::operator * (const FixedPoint & rhs)
     mul = ((( BIT(this->getBitLength()-1, this->getValue()) == 1)^
                 ( BIT(  rhs.getBitLength()-1,   rhs.getValue()) == 1) )==1) ? -(l*r) : l*r ;
 
-    printf("mul = %16lx bit_length = %lu \n", mul, bit_length);
-    printf("this->getBitLength()= %d\n", this->getBitLength());
-    printf("rhs.getBitLength() = %d\n", rhs.getBitLength());
+    // printf("mul = %16lx bit_length = %lu \n", mul, bit_length);
+    // printf("this->getBitLength()= %d\n", this->getBitLength());
+    // printf("rhs.getBitLength() = %d\n", rhs.getBitLength());
     mul = clearUpperBits(mul, bit_length);
-    printf("mul = %16lx bit_length = %lu \n", mul, bit_length);
+    // printf("mul = %16lx bit_length = %lu \n", mul, bit_length);
 
     return FixedPoint(mul, bit_length);
 
