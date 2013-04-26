@@ -18,18 +18,20 @@
 #endif
 /*===========================================================================*/
 #if (TEST==IFFT)
-// ./ifft n_poiunt input_file.txt twiddle_double.txt data_bit twiddle_bit
+// ./ifft n_poiunt input_file.txt twiddle_file.txt data_bit twiddle_bit
 int main(int argc, const char *argv[])
 {
-    size_t n_point = atoi(argv[1]);
+    size_t n_point           = atoi(argv[1]);
+    const char *input_file   =      argv[2] ;
+    const char *twiddle_file =      argv[3] ;
+    int data_bit             = atoi(argv[4]);
+    int twiddle_bit          = atoi(argv[5]);
 #if DOUBLE
     double *data_r = new double[n_point];
     double *data_i = new double[n_point];
     double *w_r    = new double[n_point/2];
     double *w_i    = new double[n_point/2];
 #else
-    int data_bit    = atoi(argv[4]);
-    int twiddle_bit = atoi(argv[5]);
 
 
     FixedPoint *data_r = new FixedPoint[n_point];
@@ -42,7 +44,7 @@ int main(int argc, const char *argv[])
     // read data
     FILE *fp = NULL;
 
-    if ((fp = fopen(argv[2], "r")) != NULL) {
+    if ((fp = fopen(input_file, "r")) != NULL) {
         for (size_t idx = 0; idx < n_point; idx++) {
 #if DOUBLE
             fscanf(fp, "%le %le\n", &data_r[idx], &data_i[idx]);
@@ -57,7 +59,7 @@ int main(int argc, const char *argv[])
         }
     } else {
         fprintf(stderr, "can't open file ");
-        perror(argv[2]);
+        perror(input_file);
         exit(-1);
     }
 
@@ -66,7 +68,7 @@ int main(int argc, const char *argv[])
     // read data
     /*----------------------------------------------------------------*/
     // read twiddle
-    if ((fp = fopen(argv[3], "r")) != NULL) {
+    if ((fp = fopen(twiddle_file, "r")) != NULL) {
 #if DOUBLE
         double useless_w_r;
         double useless_w_i;
@@ -92,7 +94,7 @@ int main(int argc, const char *argv[])
 #endif
     } else {
         fprintf(stderr, "can't open file ");
-        perror(argv[2]);
+        perror(twiddle_file);
         exit(-1);
     }
 

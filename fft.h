@@ -232,9 +232,9 @@ void fft_(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i, int fft
             fprintf(stdout, "%12.4f %12.4f ", w_r[w_idx], w_i[w_idx]);
 #else
             fprintf(stdout, "%5d %5d %7d    ", butterfly_idx_a, butterfly_idx_a+n1, w_idx);
-            fprintf(stdout, "%11lx %11lx ", data_r[butterfly_idx_a].getValue(),    data_i[butterfly_idx_a].getValue());
-            fprintf(stdout, "%11lx %11lx ", data_r[butterfly_idx_a+n1].getValue(), data_i[butterfly_idx_a+n1].getValue());
-            fprintf(stdout, "%11lx %11lx ", w_r[w_idx].getValue(), w_i[w_idx].getValue());
+            fprintf(stdout, "%12lx %12lx ", data_r[butterfly_idx_a].getValue(),    data_i[butterfly_idx_a].getValue());
+            fprintf(stdout, "%12lx %12lx ", data_r[butterfly_idx_a+n1].getValue(), data_i[butterfly_idx_a+n1].getValue());
+            fprintf(stdout, "%12lx %12lx ", w_r[w_idx].getValue(), w_i[w_idx].getValue());
 #endif
             radix2Butterfly(
                     data_r+butterfly_idx_a   , data_i+butterfly_idx_a,
@@ -244,10 +244,20 @@ void fft_(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i, int fft
             fprintf(stdout, "%12.4f %12.4f ",  data_r[butterfly_idx_a],    data_i[butterfly_idx_a]);
             fprintf(stdout, "%12.4f %12.4f\n", data_r[butterfly_idx_a+n1], data_i[butterfly_idx_a+n1]);
 #else
-            fprintf(stdout, "%11lx %11lx ",  data_r[butterfly_idx_a].getValue(),    data_i[butterfly_idx_a].getValue());
-            fprintf(stdout, "%11lx %11lx\n", data_r[butterfly_idx_a+n1].getValue(), data_i[butterfly_idx_a+n1].getValue());
+            fprintf(stdout, "%12lx %12lx ",  data_r[butterfly_idx_a].getValue(),    data_i[butterfly_idx_a].getValue());
+            fprintf(stdout, "%12lx %12lx\n", data_r[butterfly_idx_a+n1].getValue(), data_i[butterfly_idx_a+n1].getValue());
 #endif
         }
+#if !(DOUBLE)
+        printf("real\n");
+        for (int idx = 0; idx < n_point; idx++) {
+            fprintf(stdout, "%lx\n", data_r[idx].getValue());
+        }
+        printf("imag\n");
+        for (int idx = 0; idx < n_point; idx++) {
+            fprintf(stdout, "%lx\n", data_i[idx].getValue());
+        }
+#endif
     }
 
     delete [] data;

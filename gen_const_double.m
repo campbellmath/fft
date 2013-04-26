@@ -7,7 +7,7 @@ fprintf(fp, '%e 0.000000e+00\n', data);
 fclose(fp);
 
 data_fixed = double2fixed(data, data_bits);
-name = sprintf('const_fixed_%d_bits.txt', data_bits);
+name = sprintf('const_%d_points_%d_bits_hex.txt', n_point, data_bits);
 fp = fopen(name, 'w');
 for i = 1:n_point
     fprintf(fp, '%s %s\n', hex(real(data_fixed(i))), hex(imag(data_fixed(i))));

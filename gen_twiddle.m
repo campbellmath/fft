@@ -9,7 +9,7 @@ for i = 1:n_point/2
 end
 fclose(fp);
 
-fp = fopen('twiddle_fixed_20bits.txt', 'w');
+fp = fopen('twiddle_20_bits_hex.txt', 'w');
 for i = 1:n_point/2
     fprintf(fp, '%s %s\n', hex(real(twiddle_fixed(i))), hex(imag(twiddle_fixed(i))));
 end
