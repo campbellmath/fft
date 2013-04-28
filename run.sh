@@ -19,15 +19,15 @@ function runTest ()
 #    cat result | head -n `perl -e "print 2*(${n_point}+1) "`               | tail -n ${n_point}                 > input_twiddle_"${n_point}".txt
 
     for (( i = 0; i < `perl -e "print log(${n_point})/log(2)"`; i++ )); do
-        cat result | head -n `perl -e "print ((${i}+1)*(${n_point}/2+1+2*(${n_point}+1)))"` | tail -n `perl -e "print (${n_point}/2+1+2*(${n_point}+1))"` | head -n  `perl -e "print (${n_point}/2+1)"`> "${output_file}"_"${n_point}"_points_databits_"${data_bits}"_twiddiebits_"${twiddle_bits}"_index_"${i}".txt
+        cat result | head -n `perl -e "print ((${i}+1)*(${n_point}/2+1+2*(${n_point}+1)))"` | tail -n `perl -e "print (${n_point}/2+1+2*(${n_point}+1))"` | head -n  `perl -e "print (${n_point}/2+1)"`> "${output_file}"_"${n_point}"_points_databits_"${data_bits}"_twiddlebits_"${twiddle_bits}"_index_"${i}".txt
     done
 
     for (( i = 0; i < `perl -e "print log(${n_point})/log(2)"`; i++ )); do
-        cat result | head -n `perl -e "print ((${i}+1)*(${n_point}/2+1+2*(${n_point}+1)))"` | tail -n `perl -e "print (${n_point}/2+1+2*(${n_point}+1))"` | tail -n  `perl -e "print (${n_point})"` > "${output_file}"_"${n_point}"_points_databits_"${data_bits}"_twiddiebits_"${twiddle_bits}"_`echo ${i}+1 | bc`_imag.txt
+        cat result | head -n `perl -e "print ((${i}+1)*(${n_point}/2+1+2*(${n_point}+1)))"` | tail -n `perl -e "print (${n_point}/2+1+2*(${n_point}+1))"` | tail -n  `perl -e "print (${n_point})"` > "${output_file}"_"${n_point}"_points_databits_"${data_bits}"_twiddlebits_"${twiddle_bits}"_`echo ${i}+1 | bc`_imag.txt
     done
 
     for (( i = 0; i < `perl -e "print log(${n_point})/log(2)"`; i++ )); do
-        cat result | head -n `perl -e "print ((${i}+1)*(${n_point}/2+1+2*(${n_point}+1)))"` | tail -n `perl -e "print (${n_point}/2+1+2*(${n_point}+1))"` | tail -n  `perl -e "print 2*(${n_point}+1)"` | head -n  `perl -e "print (${n_point}+1)" ` | tail -n  `perl -e "print (${n_point})" `> "${output_file}"_"${n_point}"_points_databits_"${data_bits}"_twiddiebits_"${twiddle_bits}"_`echo ${i}+1 | bc`_real.txt
+        cat result | head -n `perl -e "print ((${i}+1)*(${n_point}/2+1+2*(${n_point}+1)))"` | tail -n `perl -e "print (${n_point}/2+1+2*(${n_point}+1))"` | tail -n  `perl -e "print 2*(${n_point}+1)"` | head -n  `perl -e "print (${n_point}+1)" ` | tail -n  `perl -e "print (${n_point})" `> "${output_file}"_"${n_point}"_points_databits_"${data_bits}"_twiddlebits_"${twiddle_bits}"_`echo ${i}+1 | bc`_real.txt
     done
 
     cat result | tail -n ${n_point} > "${output_file}"_result_C_"${n_point}".txt
@@ -40,7 +40,7 @@ function genData ()
     matlab -nosplash -nodesktop -nojvm -r gen_sin_double;
     # matlab -nosplash -nodesktop -nojvm -r gen_step_double;
     # matlab -nosplash -nodesktop -nojvm -r gen_const_double;
-    # matlab -nosplash -nodesktop -nojvm -r gen_rand_double;
+    matlab -nosplash -nodesktop -nojvm -r gen_rand_double;
 }
 
 function execIFFT ()
@@ -57,21 +57,29 @@ function execIFFT ()
     runTest ifft ${n_points}   sin_"${n_points}"_points_"${data_bits}"_bits_hex.txt twiddle_20_bits_hex.txt   sin ${data_bits} ${twiddle_bits}
     # runTest ifft ${n_points}  step_"${n_points}"_points_"${data_bits}"_bits_hex.txt twiddle_20_bits_hex.txt  step ${data_bits} ${twiddle_bits}
     # runTest ifft ${n_points} const_"${n_points}"_points_"${data_bits}"_bits_hex.txt twiddle_20_bits_hex.txt const ${data_bits} ${twiddle_bits}
-    # runTest ifft ${n_point}  rand_"${n_points}"_points_"${data_bits}"_bits_hex.txt twiddle_20_bits_hex.txt   rand ${data_bits} ${twiddle_bits}
+    runTest ifft ${n_points}  rand_"${n_points}"_points_"${data_bits}"_bits_hex.txt twiddle_20_bits_hex.txt  rand ${data_bits} ${twiddle_bits}
 }
 
 make clean_all
 make
-# matlab -nosplash -nodesktop -nojvm -r gen_twiddle;
+matlab -nosplash -nodesktop -nojvm -r gen_twiddle;
 
 # for $n in "2 4 8 16 32 512 1024 2048 4096 8192 16384 32768 65536" ; do
 for n in 2048; do
     export N_POINT=${n}
-    for data_bits in 20; do
+    for data_bits in 16 18 20; do
         export DATA_BITS=${data_bits}
-        for twiddle_bits in 20 ; do
+        for twiddle_bits in 16; do
             export TWIDDLE_BITS=${twiddle_}
             execIFFT ${N_POINT} ${DATA_BITS} ${twiddle_bits}
         done
     done
 done
+
+sh case001.sh
+sh case004.sh
+sh case007.sh
+
+sh case101.sh
+sh case104.sh
+sh case107.sh

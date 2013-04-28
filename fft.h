@@ -201,7 +201,7 @@ void fft_(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i, int fft
     int stages = log2(n_point);
 
     /* bit reverse */
-    bitReverse2(n_point, data_r, data_i);
+    // bitReverse2(n_point, data_r, data_i);
 
     /* FFT/IFFT */
     /* note:  n-point FFT need to compute n_point*log(n_point)/2 butterflies */
