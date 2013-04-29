@@ -199,10 +199,16 @@ template<typename T>
 void fft_(int n_point, T *data_r, T *data_i, const T *w_r, const T *w_i, int fft_inv_sign)
 {
     int stages = log2(n_point);
-
-    /* bit reverse */
-    // bitReverse2(n_point, data_r, data_i);
-
+#if !(DOUBLE)
+        printf("real\n");
+        for (int idx = 0; idx < n_point; idx++) {
+            fprintf(stdout, "%lx\n", data_r[idx].getValue());
+        }
+        printf("imag\n");
+        for (int idx = 0; idx < n_point; idx++) {
+            fprintf(stdout, "%lx\n", data_i[idx].getValue());
+        }
+#endif
     /* FFT/IFFT */
     /* note:  n-point FFT need to compute n_point*log(n_point)/2 butterflies */
     int *data = new int[n_point];

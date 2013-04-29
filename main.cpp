@@ -10,12 +10,8 @@
 #define BUFFTERFLY_DOUBLE  (1)
 #define BUFFTERFLY_FIX     (2)
 
-#if (DOUBLE==1)
-#define TEST BUFFTERFLY_DOUBLE
-#else
 // #define TEST BUFFTERFLY_FIX
 #define TEST IFFT
-#endif
 /*===========================================================================*/
 #if (TEST==IFFT)
 // ./ifft n_poiunt input_file.txt twiddle_file.txt data_bit twiddle_bit
@@ -24,15 +20,14 @@ int main(int argc, const char *argv[])
     size_t n_point           = atoi(argv[1]);
     const char *input_file   =      argv[2] ;
     const char *twiddle_file =      argv[3] ;
-    int data_bit             = atoi(argv[4]);
-    int twiddle_bit          = atoi(argv[5]);
 #if DOUBLE
     double *data_r = new double[n_point];
     double *data_i = new double[n_point];
     double *w_r    = new double[n_point/2];
     double *w_i    = new double[n_point/2];
 #else
-
+    int data_bit             = atoi(argv[4]);
+    int twiddle_bit          = atoi(argv[5]);
 
     FixedPoint *data_r = new FixedPoint[n_point];
     FixedPoint *data_i = new FixedPoint[n_point];
@@ -101,6 +96,8 @@ int main(int argc, const char *argv[])
     fclose(fp);
     fp=NULL;
     /*----------------------------------------------------------------*/
+    /* bit reverse */
+    bitReverse2(n_point, data_r, data_i);
 
     // fft(n_point, data_r, data_i, w_r, w_i);
     ifft(n_point, data_r, data_i, w_r, w_i);

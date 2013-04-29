@@ -8,9 +8,10 @@ twiddlebits="16"
 rm -vfr ${case}
 mkdir ${case}
 
-cat rand_"${n_points}"_points_"${databits}"_bits_hex.txt | awk '{print $1}' > 00_real.txt
-cat rand_"${n_points}"_points_"${databits}"_bits_hex.txt | awk '{print $2}' > 00_imag.txt
+# cat rand_"${n_points}"_points_"${databits}"_bits_hex.txt | awk '{print $1}' > 00_real.txt
+# cat rand_"${n_points}"_points_"${databits}"_bits_hex.txt | awk '{print $2}' > 00_imag.txt
 
+mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"_0_real.txt  00_real.txt
 mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"_1_real.txt  01_real.txt
 mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"_2_real.txt  02_real.txt
 mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"_3_real.txt  03_real.txt
@@ -24,6 +25,7 @@ mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"
 mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"_11_real.txt 11_real.txt
 mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"_12_real.txt 12_real.txt
 
+mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"_0_imag.txt  00_imag.txt
 mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"_1_imag.txt  01_imag.txt
 mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"_2_imag.txt  02_imag.txt
 mv rand_"${n_points}"_points_databits_"${databits}"_twiddlebits_"${twiddlebits}"_3_imag.txt  03_imag.txt
