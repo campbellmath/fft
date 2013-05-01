@@ -1,5 +1,6 @@
 #include "FixedPoint.h"
 #include <iostream>
+#include <cmath>
 #define BIT(N, x) (((x)>>(N))&0x1)
 /*===========================================================================*/
 static UINT64 clearUpperBits(UINT64 value, UINT64 n)
@@ -188,5 +189,26 @@ std::ostream& operator << (std::ostream & out, const FixedPoint & point)
     out<<"0x"<<std::hex<<point.getValue()<<std::dec;
 
     return out;
+}
+/*===========================================================================*/
+double fix2double(UINT64 x, size_t word_length, size_t fraction_length)
+{
+    double value = 0.0;
+    double fraction = pow(1.0/2.0, static_cast<double>(fraction_length));
+    int sign = ((x>>(word_length-1))&0x1lu);
+
+    if (sign==1) {
+        x=~x+1;
+    }
+
+    x = clearUpperBits(x, word_length);
+
+    value = static_cast<double>(x)*fraction;
+
+    if (sign==1) {
+        value=-value;
+    }
+
+    return value;
 }
 /*===========================================================================*/

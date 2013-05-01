@@ -35,4 +35,5 @@ class FixedPoint {
 /*===========================================================================*/
 std::ostream& operator << (std::ostream & out, const FixedPoint & point);
 /*===========================================================================*/
+double fix2double(UINT64 x, size_t word_length, size_t fraction_length);
 #endif /* end of __FIXEDPOINT_H__ */
