@@ -21,7 +21,7 @@ endif
 C_OBJS      = $(patsubst %.c,%.o,$(wildcard $(C_SOURCES)))
 CXX_OBJS    = $(patsubst %.cpp,%.o,$(wildcard $(CXX_SOURCES)))
 OBJS        = $(C_OBJS) $(CXX_OBJS)
-EXEC        = ifft
+EXEC        = ifft snr
 
 ###############################################################################
 .PHONY : clean clean_all
@@ -33,9 +33,11 @@ all: $(EXEC)
 %.o:%.cpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) $< -o $@
 
-$(EXEC): $(OBJS)
-	$(CXX) $(OBJS) -o $(EXEC) $(LIBS)
+ifft: FixedPoint.o main.o
+	$(CXX) FixedPoint.o main.o -o ifft  $(LIBS)
 
+snr: snr.o
+	$(CXX) snr.o -o snr  $(LIBS)
 ###############################################################################
 clean:
 	@rm -vfr $(OBJS)

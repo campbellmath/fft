@@ -72,29 +72,29 @@ for n in 2048 4096 8192; do
     export N_POINT=${n}
     for data_bits in 16 18 20; do
         export DATA_BITS=${data_bits}
-        for twiddle_bits in 20; do
+        for twiddle_bits in 16; do
             export TWIDDLE_BITS=${twiddle_}
             execIFFT ${N_POINT} ${DATA_BITS} ${twiddle_bits}
         done
     done
 done
 
-# sh case001.sh
-# sh case004.sh
-# sh case007.sh
-# sh case010.sh
-# sh case013.sh
-# sh case016.sh
-# sh case019.sh
-# sh case022.sh
-# sh case025.sh
-# 
-# sh case101.sh
-# sh case104.sh
-# sh case107.sh
-# sh case110.sh
-# sh case113.sh
-# sh case116.sh
-# sh case119.sh
-# sh case122.sh
-# sh case125.sh
+sh case001.sh
+sh case004.sh
+sh case007.sh
+sh case010.sh
+sh case013.sh
+sh case016.sh
+sh case019.sh
+sh case022.sh
+sh case025.sh
+
+sh case101.sh
+sh case104.sh
+sh case107.sh
+sh case110.sh
+sh case113.sh
+sh case116.sh
+sh case119.sh
+sh case122.sh
+sh case125.sh

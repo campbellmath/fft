@@ -132,14 +132,16 @@ int main(int argc, const char *argv[])
     fclose(fp);
 
     fp = NULL;
+
+#define BITS (16)
     if ((fp = fopen(c_filename, "r")) != NULL) {
         for (size_t idx = 0; idx < n; idx++) {
             size_t nouse[2] = {0, 0};
             UINT64 real = 0x0;
             UINT64 imag = 0x0;
             fscanf(fp, "%lx (%lu) %lx (%lu)\n", &real, &nouse[0], &imag, &nouse[1]);
-            real &= 0xfffffffffffff800;
-            imag &= 0xfffffffffffff800;
+            real &= ((-1)>>BITS)<<BITS;
+            imag &= ((-1)>>BITS)<<BITS;
             c_result[idx].real = fix2double(real, word_length, fraction_length);
             c_result[idx].imag = fix2double(imag, word_length, fraction_length);
 //            fprintf(stdout, "%d, %.16f %.16f |  %.16f %.16f|  %.16f %.16f\n", idx,
@@ -159,7 +161,7 @@ int main(int argc, const char *argv[])
     fclose(fp);
     fp = NULL;
 
-    printf("snr = %g\n", snr(n, c_result, matlab_result));
+    printf("bits = %d, snr = %g\n", BITS, snr(n, c_result, matlab_result));
 #endif
 //    UINT64 x = 0;
 //

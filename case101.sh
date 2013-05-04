@@ -53,7 +53,34 @@ for stage in `seq -f "%02g" 0 11` ; do
     mv "${stage}"_real.txt ${case}
     mv "${stage}"_imag.txt ${case}
 done
-# 
+#
 for stage in `seq -f "%02g" 0 10` ; do
     mv "${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_"${stage}".txt ${case}
 done
+
+dir=${case}"/"
+
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_00.txt ${n_points} 1 | xargs ./parse.pl > ${dir}01_real.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_01.txt ${n_points} 1 | xargs ./parse.pl > ${dir}02_real.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_02.txt ${n_points} 1 | xargs ./parse.pl > ${dir}03_real.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_03.txt ${n_points} 1 | xargs ./parse.pl > ${dir}04_real.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_04.txt ${n_points} 1 | xargs ./parse.pl > ${dir}05_real.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_05.txt ${n_points} 1 | xargs ./parse.pl > ${dir}06_real.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_06.txt ${n_points} 1 | xargs ./parse.pl > ${dir}07_real.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_07.txt ${n_points} 1 | xargs ./parse.pl > ${dir}08_real.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_08.txt ${n_points} 1 | xargs ./parse.pl > ${dir}09_real.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_09.txt ${n_points} 1 | xargs ./parse.pl > ${dir}10_real.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_10.txt ${n_points} 1 | xargs ./parse.pl > ${dir}11_real.txt
+
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_00.txt ${n_points} 0 | xargs ./parse.pl > ${dir}01_imag.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_01.txt ${n_points} 0 | xargs ./parse.pl > ${dir}02_imag.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_02.txt ${n_points} 0 | xargs ./parse.pl > ${dir}03_imag.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_03.txt ${n_points} 0 | xargs ./parse.pl > ${dir}04_imag.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_04.txt ${n_points} 0 | xargs ./parse.pl > ${dir}05_imag.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_05.txt ${n_points} 0 | xargs ./parse.pl > ${dir}06_imag.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_06.txt ${n_points} 0 | xargs ./parse.pl > ${dir}07_imag.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_07.txt ${n_points} 0 | xargs ./parse.pl > ${dir}08_imag.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_08.txt ${n_points} 0 | xargs ./parse.pl > ${dir}09_imag.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_09.txt ${n_points} 0 | xargs ./parse.pl > ${dir}10_imag.txt
+echo "${dir}""${n_points}"_points_databits_"${databits}"_twiddiebits_"${twiddlebits}"_index_10.txt ${n_points} 0 | xargs ./parse.pl > ${dir}11_imag.txt
+
