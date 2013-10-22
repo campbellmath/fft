@@ -116,6 +116,7 @@ int main(int argc, const char *argv[])
     const size_t fraction_length = atoi(argv[3]);
     const char      *c_filename  =      argv[4];
     const char *matlab_filename  =      argv[5];
+    const size_t truncate_bits   = atoi(argv[6]);
     complex_t         *c_result  = new complex_t[n];
     complex_t    *matlab_result  = new complex_t[n];
 
@@ -133,24 +134,23 @@ int main(int argc, const char *argv[])
 
     fp = NULL;
 
-#define BITS (16)
     if ((fp = fopen(c_filename, "r")) != NULL) {
         for (size_t idx = 0; idx < n; idx++) {
             size_t nouse[2] = {0, 0};
             UINT64 real = 0x0;
             UINT64 imag = 0x0;
             fscanf(fp, "%lx (%lu) %lx (%lu)\n", &real, &nouse[0], &imag, &nouse[1]);
-            real &= ((-1)>>BITS)<<BITS;
-            imag &= ((-1)>>BITS)<<BITS;
+            real &= ((-1)>>truncate_bits)<<truncate_bits;
+            imag &= ((-1)>>truncate_bits)<<truncate_bits;
             c_result[idx].real = fix2double(real, word_length, fraction_length);
             c_result[idx].imag = fix2double(imag, word_length, fraction_length);
-//            fprintf(stdout, "%d, %.16f %.16f |  %.16f %.16f|  %.16f %.16f\n", idx,
-//            std::abs(c_result[idx].real-matlab_result[idx].real),
-//            std::abs(c_result[idx].imag-matlab_result[idx].imag),
-//            std::abs(c_result[idx].real),
-//            std::abs(c_result[idx].imag),
-//            std::abs(matlab_result[idx].real),
-//            std::abs(matlab_result[idx].imag));
+            // fprintf(stdout, "%d, %.16f %.16f |  %.16f %.16f|  %.16f %.16f\n", idx,
+            // std::abs(std::abs(c_result[idx].real)-std::abs(matlab_result[idx].real)),
+            // std::abs(std::abs(c_result[idx].imag)-std::abs(matlab_result[idx].imag)),
+            // std::abs(c_result[idx].real),
+            // std::abs(c_result[idx].imag),
+            // std::abs(matlab_result[idx].real),
+            // std::abs(matlab_result[idx].imag));
 
         }
     } else {
@@ -161,7 +161,7 @@ int main(int argc, const char *argv[])
     fclose(fp);
     fp = NULL;
 
-    printf("bits = %d, snr = %g\n", BITS, snr(n, c_result, matlab_result));
+    printf("%11lu %13lu     %.4f(%2lu) \n", word_length, truncate_bits, snr(n, c_result, matlab_result), word_length-truncate_bits);
 #endif
 //    UINT64 x = 0;
 //
